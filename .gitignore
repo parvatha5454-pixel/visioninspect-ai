@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+uploaded_images/
+dataset_images/
+model_artifacts/
