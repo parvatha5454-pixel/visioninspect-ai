@@ -5,3 +5,6 @@ __pycache__/
 uploaded_images/
 dataset_images/
 model_artifacts/
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
