@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .database import engine, Base
-from .routers import users, images, categories, inspections
+from .routers import users, images, categories, inspections, analytics
 
 app = FastAPI(title="VisionInspect AI")
 
@@ -20,6 +20,8 @@ app.include_router(users.router)
 app.include_router(images.router)
 app.include_router(categories.router)
 app.include_router(inspections.router)
+app.include_router(analytics.router)
+
 
 
 @app.get("/")

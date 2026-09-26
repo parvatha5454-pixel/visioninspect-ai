@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 const NAV_ITEMS = [
   { key: "dashboard", label: "Dashboard", href: "/dashboard", icon: "▣", enabled: true },
   { key: "inspections", label: "Inspections", href: "#", icon: "◎", enabled: false },
-  { key: "analytics", label: "Analytics", href: "#", icon: "▤", enabled: false },
+  { key: "analytics", label: "Analytics", href: "/analytics", icon: "▤", enabled: true },
   { key: "reports", label: "Reports", href: "#", icon: "▧", enabled: false },
   { key: "settings", label: "Settings", href: "#", icon: "⚙", enabled: false },
 ];
@@ -68,7 +68,7 @@ export default function Sidebar() {
             <span
               style={{
                 ...styles.moduleDot,
-                background: i < 3 ? "var(--ok)" : "var(--border)",
+                background: i < 7 ? "var(--ok)" : "var(--border)",
               }}
             />
             {m}

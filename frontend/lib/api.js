@@ -7,7 +7,12 @@ export function getToken() {
 
 export function setToken(token) {
   localStorage.setItem("vi_token", token);
+} 
+
+export async function getAnalyticsSummary() {
+  return request("/analytics/summary");
 }
+
 
 export function clearToken() {
   localStorage.removeItem("vi_token");

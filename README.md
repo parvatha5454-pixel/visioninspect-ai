@@ -1,18 +1,24 @@
-# VisionInspect AI
+# AI-Powered Manufacturing Defect Detection and Automated Quality Inspection Platform
 
-AI-powered manufacturing defect detection and quality inspection platform.
+**VisionInspect AI** — an AI-powered manufacturing quality inspection platform
+that detects product defects from images, classifies defect types, scores
+severity, and provides production analytics.
+
+> This branch (`Parvathavarthini`) contains one student's implementation of
+> the project (Milestones 1–3 complete).
 
 ## Project Structure
 
 ```
-visioninspect-ai/
-    app/          → FastAPI backend
-    frontend/     → Next.js frontend
+.
+├── backend/    → FastAPI backend
+└── frontend/   → Next.js frontend
 ```
 
 ## Backend Setup
 
 ```bash
+cd backend
 python -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
@@ -31,7 +37,7 @@ uvicorn app.main:app --reload
 
 Visit:
 - http://localhost:8000 → health check
-- http://localhost:8000/docs → Swagger UI (test signup/login/upload here)
+- http://localhost:8000/docs → Swagger UI (signup/login/upload/inspect here)
 
 ## Frontend Setup
 
@@ -47,35 +53,47 @@ Visit http://localhost:3000 (redirects to `/login`).
 ## Loading the MVTec AD Dataset (optional, for realistic test data)
 
 ```bash
+cd backend
 python load_mvtec_dataset.py "path\to\extracted\mvtec_ad"
 python build_references.py
+python update_defect_labels.py
 ```
 
-The first script loads all 15 category images into the database. The
-second builds the anomaly-detection reference profile used by the defect
-detection engine.
+1. `load_mvtec_dataset.py` — loads all 15 MVTec AD categories (5,000+ images) into the database
+2. `build_references.py` — builds the anomaly-detection reference profile per category
+3. `update_defect_labels.py` — tags known-defective dataset images with their specific defect type (from the dataset's own folder labels)
 
 ## What's Implemented
 
 ### Milestone 1 (Week 1 & 2) — Core Setup
-- `app/models.py` — 6 tables: users, categories, images, inspections, defects, inspection_results
-- `app/auth.py` — JWT auth (signup, login, role-based access via `require_role`)
-- `app/routers/users.py` — `/users/signup`, `/users/login`, `/users/me`
-- `app/routers/images.py` — `/images/upload`, `/images/`, `/images/{id}`, `/images/{id}/file`
-- `app/routers/categories.py` — `/categories/` (GET open to all, POST admin-only)
-- Role-based access tested end-to-end (Inspector blocked from admin actions with 403; Admin allowed with 200)
-- Frontend: login, signup, dashboard (upload + browse units), inspection detail page
-- MVTec AD dataset loader — loads all 15 categories, 5,000+ images
+- 6-table database schema: users, categories, images, inspections, defects, inspection_results
+- JWT authentication with role-based access control (Inspector vs Admin — tested end-to-end with 403/200 responses)
+- Image upload API and a full frontend: login, signup, dashboard (upload + browse), inspection detail page
+- Full MVTec AD dataset loaded (15 categories, 5,000+ images)
+- UI wireframes for all major screens
 
 ### Milestone 2 (Week 3 & 4) — Image Processing & Defect Detection
-- `app/vision/preprocessing.py` — resize, grayscale, denoise, CLAHE contrast enhancement, image quality report (sharpness/brightness/blur)
-- `app/vision/detector.py` — per-category reference profile (mean/std of "good" training images), anomaly scoring
-- `build_references.py` — builds reference profiles for all categories
-- `app/routers/inspections.py` — `/inspections/run/{image_id}` — runs detection, stores result + defect in DB
-- Frontend inspection page — "Run inspection" button, live Pass/Fail badge, confidence gauge, severity-coded defect list, quality report
+- Image preprocessing pipeline (resize, grayscale, noise removal, CLAHE contrast enhancement) using OpenCV
+- Image quality analysis (sharpness/blur, brightness)
+- Defect detection engine: a per-category reference profile (mean/std of "good" training images) with patch-based deviation scoring — sensitive to small, localized defects
+- `/inspections/run/{image_id}` endpoint — runs detection, stores Pass/Fail result + confidence in the database
+- Live inspection results in the UI (Pass/Fail badge, confidence gauge)
 
-## Next Steps (Milestone 3 — Week 5 & 6)
+### Milestone 3 (Week 5 & 6) — Defect Classification & Manufacturing Analytics
+- Defect type classification using the MVTec dataset's own ground-truth defect labels (e.g. "broken small", "contamination", "bent wire") instead of a generic tag
+- Full severity scoring formula, matching the project spec exactly:
+  **Size (30%) + Location (25%) + Defect Type (25%) + Confidence (20%)**
+- Severity breakdown UI (per-factor progress bars + total score) on the inspection detail page
+- Manufacturing Analytics dashboard: total inspections, pass/fail rate, severity breakdown, top defect types, category-wise pass/fail table, inspections-over-time trend chart
 
-- Defect classification refinement (multiple defect types per inspection)
-- Full severity scoring formula (size/location/type/confidence weighted)
-- Manufacturing analytics dashboard (trends, pass/fail rates, reports)
+## Tech Stack
+
+- **Backend:** Python, FastAPI, SQLAlchemy, PostgreSQL, OpenCV, NumPy, JWT (python-jose), bcrypt
+- **Frontend:** Next.js (React), plain CSS-in-JS
+- **Defect detection:** classical statistical anomaly detection (patch-based deviation from a per-category reference profile) — not a trained deep-learning model, chosen for the project timeline
+
+## Next Steps (Milestone 4 — Week 7 & 8)
+
+- Validate detection accuracy with proper metrics (precision/recall/F1)
+- Docker containerization and cloud deployment
+- Final documentation and presentation
