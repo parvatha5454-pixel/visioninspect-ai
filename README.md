@@ -161,8 +161,11 @@ Codespaces.
   from scratch on a few hundred images per category, not a large
   pretrained model — further accuracy gains are possible with more
   training data or a deeper architecture
-- Cloud deployment (AWS/Azure) was validated locally and in GitHub
-  Codespaces; a persistent public cloud deployment is a natural next
-  step beyond this milestone
+- The app is deployed on free hosting tiers: Vercel for the frontend, and
+  Render for the backend and PostgreSQL. Free tiers sleep after inactivity,
+  so the first request can take about 50 seconds. A production deployment
+  (for example on AWS or Azure) with persistent storage is a natural next
+  step. The Docker Compose setup (db, backend, frontend) was built and run
+  in GitHub Codespaces.
 - Accuracy numbers were measured on the original MVTec images locally. The deployed demo is seeded with 515 images stored as 256px thumbnails, so individual results can differ slightly.
 - On the free hosting tier, uploaded images are temporary and are cleared when the backend restarts.
