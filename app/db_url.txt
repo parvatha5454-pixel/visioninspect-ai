@@ -1,1 +1,0 @@
-postgresql+psycopg2://visioninspect_db_p3e1_user:NSvcl3NLhu5K6LEKihJJhYvIDrqkARIa@dpg-db3ot0cs728c73fme2q0-a.singapore-postgres.render.com/visioninspect_db_p3e1?sslmode=require
